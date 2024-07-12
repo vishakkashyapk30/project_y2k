@@ -1,0 +1,189 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rubik+Glitch&family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+
+.image-upload{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 70%;
+    padding: 2rem;
+    margin: 2rem;
+    border: 2px dashed var(--color-cyan);
+    border-radius: 10px;
+    background-color: var(--color-menu);
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 10px );
+    -webkit-backdrop-filter: blur( 10px );
+    color: var(--color-white);
+    transition: all 0.3s ease-in-out;
+}
+
+.image-upload form{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    width: 100%;
+}
+
+.image-upload form label{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    width: 100%;
+    color: var(--color-white);
+    transition: all 0.3s ease-in-out;
+}
+
+.image-upload form label input{
+    padding: 0.5rem;
+    width: 20%;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--color-menu);
+    color: var(--color-white);
+    font-size: 1rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.audio-upload{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 70%;
+    padding: 2rem;
+    margin: 2rem;
+    border: 2px dashed var(--color-pink);
+    border-radius: 10px;
+    background-color: var(--color-menu);
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 10px );
+    -webkit-backdrop-filter: blur( 10px );
+    color: var(--color-white);
+    transition: all 0.3s ease-in-out;
+}
+
+.audio-upload form{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    width: 100%;
+}
+
+.audio-upload form label{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    width: 100%;
+    color: var(--color-white);
+    transition: all 0.3s ease-in-out;
+}
+
+.audio-upload form label input{
+    padding: 0.5rem;
+    width: 20%;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--color-menu);
+    color: var(--color-white);
+    font-size: 1rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.fallback{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 70%;
+    padding: 2rem;
+    margin: 2rem;
+    border: 2px dashed var(--color-white);
+    border-radius: 10px;
+    background-color: var(--color-menu);
+    color: var(--color-white);
+    transition: all 0.3s ease-in-out;
+}
+
+.dropzone{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 2rem;
+    margin: 2rem;
+    border: 2px dashed var(--color-white);
+    border-radius: 10px;
+    background-color: var(--color-menu);
+    color: var(--color-white);
+    transition: all 0.3s ease-in-out;
+}
+
+.submit-btn{
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--color-white);
+    color: var(--color-menu);
+    font-size: 1rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.submit-btn:hover{
+    background-color: var(--color-orange);
+    color: var(--color-white);
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.main-content h2{
+    margin-top: 1rem;
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: var(--color-white);
+    transition: all 0.3s ease-in-out;
+}
+
+.main-content h2:first-child{
+    margin-top: 3rem;
+}
+
+.dz-success-mark svg, .dz-error-mark svg {
+    fill: #fff;
+    stroke: #000;
+    stroke-width: 2;
+    width: 50px;
+    height: 50px;
+}
+
+.dz-success-mark {
+    color: green;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    padding: 5px;
+}
+
+.dz-error-mark {
+    color: red;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    padding: 5px;
+}
+
+.dz-upload {
+    background-color: var(--color-orange);
+    height: 10px;
+    border-radius: 5px;
+}
