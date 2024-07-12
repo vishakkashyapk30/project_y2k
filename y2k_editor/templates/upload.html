@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Upload Images/Audio</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.0/dropzone.css" rel="stylesheet">
+        <link rel="icon" href="{{ url_for('static', filename='images/logo-no-text.png') }}" type="image/x-icon">
+        <link rel="stylesheet" href={{url_for('static',filename='styles/commstyle.css')}}>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/uploadstyle.css') }}">
+    </head>
+    <body>
+        <nav class="sidebar">
+            <ul class="sidebar-nav">
+                <div class="sidebar-logo">
+                    <img src={{url_for('static',filename='images/logo-no-text.png')}} alt="logo">
+                </div>
+                <button class="sidebar-close" onclick="toggleMenu()">
+                    <i  id="sidebar-btn" class='bx bxs-chevrons-right'></i>
+                </button>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('user_dashboard') }}>
+                        <i class='bx bx-home-alt-2' ></i>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('video_editor') }}>
+                        <i class='bx bx-video-plus' ></i>
+                        <span class="nav-text">Video Editor</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('upload') }}>
+                        <i class='bx bx-upload' ></i>
+                        <span class="nav-text">Upload Images/Audio</span>
+                    </a>
+                </li>
+            </ul>
+            <ul>
+                {% if username == 'admin' %}
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('admin_dashboard') }}>
+                        <i class='bx bxs-report'></i>
+                        <span class="nav-text">Admin Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('images_audio_database') }}>
+                        <i class='bx bx-data' ></i>
+                        <span class="nav-text">Media Database</span>
+                    </a>
+                </li>
+                {% endif %}
+                <li class="sidebar-nav-item">
+                    <a href="{{ url_for('user_details', username=username) }}">
+                        <i class='bx bxs-user-circle'></i>
+                        <span class="nav-text">{{username}}</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('logout') }}>
+                        <i class='bx bx-log-out' ></i>
+                        <span class="nav-text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="main-content">
+            <h2>Upload Images</h2>
+            <div class="image-upload" id="image-upload">
+                <form action="{{ url_for('upload') }}" class="dropzone" id="imageDropzone">
+                    <div class="fallback">
+                        <input name="image" type="file" multiple />
+                    </div>
+                    <input type="hidden" name="file_type" value="image">
+                </form>
+                <button class="submit-btn" id="submitImage">Upload Images</button>
+            </div>
+            <h2>Upload Audio</h2>
+            <div class="audio-upload" id="audio-upload">
+                <form action="{{ url_for('upload') }}" class="dropzone" id="audioDropzone">
+                    <div class="fallback">
+                        <input name="audio" type="file" multiple />
+                    </div>
+                    <input type="hidden" name="file_type" value="audio">
+                </form>
+                <button class="submit-btn" id="submitAudio">Upload Audio</button>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.0/dropzone.js"></script>
+        <script src="{{ url_for('static', filename='scripts/script.js') }}" async defer></script>
+        <script>
+            Dropzone.autoDiscover = false;
+
+            var imageDropzone = new Dropzone("#imageDropzone", {
+                paramName: "image", 
+                addRemoveLinks: true,
+                autoProcessQueue: false,
+                dictDefaultMessage: 'Drag an image here or click to select and upload upto 5 images at a time',
+            });
+        
+            imageDropzone.on("addedfile", function(file) {
+                if (!file.type.match(/image.*/)) {
+                    this.removeFile(file);
+                    alert("Error: Files of this type are not accepted");
+                }
+            });
+
+            var audioDropzone = new Dropzone("#audioDropzone", {
+                paramName: "audio",
+                addRemoveLinks: true,
+                autoProcessQueue: false,
+                dictDefaultMessage: 'Drag an audio file or click to select and upload upto 5 audios at a time',
+            });
+        
+            document.getElementById("submitImage").addEventListener("click", function() {
+                imageDropzone.processQueue();
+            });
+
+            audioDropzone.on("addedfile", function(file) {
+                if (!file.type.match(/audio.*/)) {
+                    this.removeFile(file);
+                    alert("Error: Files of this type are not accepted");
+                }
+            });
+        
+            document.getElementById("submitAudio").addEventListener("click", function() {
+                audioDropzone.processQueue();
+            });
+        
+            imageDropzone.on("queuecomplete", function() {
+                location.reload();
+            });
+        
+            audioDropzone.on("queuecomplete", function() {
+                location.reload();
+            });
+
+            audioDropzone.on("maxfilesexceeded", function(file) {
+                this.removeFile(file);
+                alert("Error: File size exceeds the limit");
+            });
+
+            imageDropzone.on("maxfilesexceeded", function(file) {
+                this.removeFile(file);
+                alert("Error: File size exceeds the limit");
+            });
+        </script>
+    </body>
+</html>

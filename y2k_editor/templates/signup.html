@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Y2K Video Editor</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="icon" href={{url_for('static',filename='images/logo.ico')}} type="image/x-icon">
+    <link rel="stylesheet" href={{ url_for('static',filename='styles/signupstyle.css')}}>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="bubbles">
+            <span style="--i:19"></span>
+            <span style="--i:16"></span>
+            <span style="--i:19"></span>
+            <span style="--i:22"></span>
+            <span style="--i:17"></span>
+            <span style="--i:20"></span>
+            <span style="--i:25"></span>
+            <span style="--i:15"></span>
+            <span style="--i:23"></span>
+            <span style="--i:18"></span>
+            <span style="--i:24"></span>
+            <span style="--i:25"></span>
+            <span style="--i:16"></span>
+            <span style="--i:20"></span>
+            <span style="--i:21"></span>
+            <span style="--i:18"></span>
+            <span style="--i:19"></span>
+            <span style="--i:23"></span>
+            <span style="--i:17"></span>
+            <span style="--i:22"></span>
+            <span style="--i:15"></span>
+            <span style="--i:24"></span>
+            <span style="--i:19"></span>
+            <span style="--i:23"></span>
+            <span style="--i:21"></span>
+            <span style="--i:20"></span>
+            <span style="--i:25"></span>
+            <span style="--i:16"></span>
+            <span style="--i:17"></span>
+            <span style="--i:22"></span>
+            <span style="--i:18"></span>
+            <span style="--i:15"></span>
+            <span style="--i:21"></span>
+            <span style="--i:24"></span>
+            <span style="--i:23"></span>
+            <span style="--i:19"></span>
+            <span style="--i:20"></span>
+            <span style="--i:25"></span>
+            <span style="--i:16"></span>
+            <span style="--i:17"></span>
+            <span style="--i:22"></span>
+            <span style="--i:15"></span>
+            <span style="--i:24"></span>
+            <span style="--i:18"></span>
+            <span style="--i:19"></span>
+            <span style="--i:23"></span>
+            <span style="--i:20"></span>
+            <span style="--i:25"></span>
+            <span style="--i:16"></span>
+            <span style="--i:17"></span>
+            <span style="--i:22"></span>
+            <span style="--i:15"></span>
+            <span style="--i:24"></span>
+            <span style="--i:19"></span>
+            <span style="--i:23"></span>
+            <span style="--i:21"></span>
+            <span style="--i:20"></span>
+            <span style="--i:25"></span>
+            <span style="--i:16"></span>
+            <span style="--i:17"></span>
+            <span style="--i:22"></span>
+            <span style="--i:18"></span>
+            <span style="--i:15"></span>
+            <span style="--i:21"></span>
+            <span style="--i:24"></span>
+            <span style="--i:23"></span>
+            <span style="--i:19"></span>
+            <span style="--i:20"></span>
+            <span style="--i:25"></span>
+            <span style="--i:16"></span>
+            <span style="--i:17"></span>
+            <span style="--i:22"></span>
+            <span style="--i:15"></span>
+            <span style="--i:24"></span>
+            <span style="--i:18"></span>
+            <span style="--i:19"></span>
+            <span style="--i:23"></span>
+            <span style="--i:21"></span>
+            <span style="--i:20"></span>
+            <span style="--i:25"></span>
+            <span style="--i:16"></span>
+            <span style="--i:18"></span>
+            <span style="--i:15"></span>
+            <span style="--i:21"></span>
+            <span style="--i:24"></span>
+            <span style="--i:23"></span>
+            <span style="--i:19"></span>
+            <span style="--i:20"></span>
+            <span style="--i:25"></span>
+            <span style="--i:16"></span>
+            <span style="--i:17"></span>
+            <span style="--i:22"></span>
+            <span style="--i:15"></span>
+            <span style="--i:24"></span>
+            <span style="--i:18"></span>
+        </div>
+    </div>
+    <div class="back-button" onclick="window.location.href='/'">
+        <i class='bx bx-arrow-back'></i>    
+    </div>
+    <div class="box">
+        <span class="borderLine"></span>
+        <form id="signupForm" method="post" action="/signup">
+            <h2>Sign Up</h2>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="inputBox">
+                <input type="text" name="username" id="username" required>
+                <span>Username</span>
+                <i></i>
+            </div>
+            <div class="inputBox">
+                <input type="email" name="email" id="email" required>
+                <span>Email</span>
+                <i></i>
+            </div>
+            <div class="inputBox">
+                <input type="password" name="password" id="password" required>
+                <span>Password</span>
+                <i></i>
+            </div>
+            <div class="links">
+                <a href={{ url_for('login') }}>Have an account? Login</a>
+            </div>
+            <input type="submit" value="Sign Up" class="signup-button">
+        </form>
+    </div>
+    <script>
+        $('#signupForm').on('submit', function(event) {
+            event.preventDefault();
+            doSignup();
+        });
+        function doSignup(){
+            var username = $('#username').val();
+            var email = $('#email').val();
+            var password = $('#password').val();
+            var csrf_token = $('input[name="csrf_token"]').val();
+            $.ajax({
+                url: '/signup',
+                type: 'POST',
+                data: {
+                    username: username,
+                    email: email,
+                    password: password,
+                    csrf_token: csrf_token
+                },
+                success: function(response){
+                    if(response.status == 'success'){
+                        alert(response.message);
+                        window.location.href = '/user_dashboard';
+                    } else if(response.status == 'error'){
+                        alert(response.message);
+                        window.location.href = '/signup';
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    alert('An error occurred during the request: ' + textStatus);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

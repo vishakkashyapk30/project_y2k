@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>User Dashboard</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link rel="icon" href={{url_for('static',filename='images/logo.ico')}} type="image/x-icon">
+        <link rel="stylesheet" href={{url_for('static',filename='styles/commstyle.css')}}>
+        <link rel="stylesheet" href={{url_for('static',filename='styles/homestyle.css')}}>
+    </head>
+    <body>
+        <nav class="sidebar">
+            <ul class="sidebar-nav">
+                <div class="sidebar-logo">
+                    <img src={{url_for('static',filename='images/logo-no-text.png')}} alt="logo">
+                </div>
+                <button class="sidebar-close" onclick="toggleMenu()">
+                    <i  id="sidebar-btn" class='bx bxs-chevrons-right'></i>
+                </button>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('user_dashboard') }}>
+                        <i class='bx bx-home-alt-2' ></i>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('video_editor') }}>
+                        <i class='bx bx-video-plus' ></i>
+                        <span class="nav-text">Video Editor</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('upload') }}>
+                        <i class='bx bx-upload'></i>
+                        <span class="nav-text">Upload Images/Audio</span>
+                    </a>
+                </li>
+            </ul>
+            <ul>
+                {% if username == 'admin' %}
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('admin_dashboard') }}>
+                        <i class='bx bxs-report'></i>
+                        <span class="nav-text">Admin Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('images_audio_database') }}>
+                        <i class='bx bx-data' ></i>
+                        <span class="nav-text">Media Database</span>
+                    </a>
+                </li>
+                {% endif %}                                     
+                <li class="sidebar-nav-item">
+                    <a href="{{ url_for('user_details', username=username) }}">
+                        <i class='bx bxs-user-circle'></i>
+                        <span class="nav-text">{{username}}</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('logout') }}>
+                        <i class='bx bx-log-out' ></i>
+                        <span class="nav-text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="main-content">
+            <header>
+                <div class="search-wrapper">
+                    <i class='bx bx-search' onclick="searchImage()"></i>
+                    <input id="searchbar" type="search" placeholder="Search">
+                </div>
+            </header>
+            <div  id="search-results" class="search-results invisible">
+                <div class="search-results-header">
+                    <p>Search Results</p>
+                </div>
+                <div class="image_gallery">
+                </div>
+            </div>
+            <div class="non-search-results">
+                <div class="image-gallery-header">
+                    <p>Your Images</p>
+                </div>
+                <div class="image_gallery">
+                    {% for image in images %}
+                        <div class="image-container" id="image-{{ image['id'] }}">
+                            <img src="{{ url_for('get_image',image_id=image['id']) }}" alt="image" data-filename="{{ image['filename'] }}">
+                            <input type="checkbox" id="image-checkbox-{{ image['id'] }}" class="image-checkbox" data-image-id="{{ image['id'] }}">
+                            <label for="image-checkbox-{{ image['id'] }}"></label>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="audio-gallery-header">
+                    <p>Your Audios</p>
+                </div>
+                <div class="audio_gallery">
+                    {% for audio in audios %}
+                        <div class="audio-container" id="audio-{{ audio['id'] }}">
+                            <audio controls>
+                                <source src="{{ url_for('get_audio',audio_id=audio['id']) }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                            <input type="checkbox" id="audio-checkbox-{{ audio['id'] }}" class="audio-checkbox" data-image-id="{{ audio['id'] }}">
+                            <label for="audio-checkbox-{{ audio['id'] }}"></label>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if username!='admin' %}
+                <div class="audio-gallery-header">
+                    <p>Default Audios</p>
+                </div>
+                <div class="audio_gallery">
+                    {% for audio in default_audios %}
+                        <div class="audio-container" id="audio-{{ audio['id'] }}">
+                            <audio controls>
+                                <source src="{{ url_for('get_audio',audio_id=audio['id']) }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                            <input type="checkbox" id="audio-checkbox-{{ audio['id'] }}" class="audio-checkbox" data-audio-id="{{ audio['id'] }}">
+                            <label for="audio-checkbox-{{ audio['id'] }}"></label>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <!--
+                <div id="video-bar" onclick="createVideo()">
+                    <span>Create Video</span>
+                </div>-->
+                <div id="delete-images">
+                    <span onclick="deleteImages()">Delete Images</span>
+                </div>
+                <div id="delete-audio">
+                    <span onclick="deleteAudio()">Delete Audios</span>
+                </div>
+            </div>
+        </div>
+        <div id="imageModal" class="modal">
+            <span class="close">
+                <i class='bx bx-x'></i>
+            </span>
+            <div class="modal-image-container">
+                <img id="modalImage">
+            </div>
+            <div id="modal-caption"></div>
+        </div>
+        </div>
+        <script src="{{ url_for('static', filename='scripts/script.js') }}" async defer></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var checkboxes = document.getElementsByClassName('image-checkbox');
+                for (var i = 0; i < checkboxes.length; i++) {
+                    checkboxes[i].checked = false;
+                }
+            });
+
+            var searchbar = document.getElementById('searchbar');
+            var galleries = document.getElementsByClassName('image_gallery');
+            var searchResults = document.getElementById('search-results');
+            var nonSearchResults = document.querySelector('.non-search-results');
+
+            function searchImage() {
+                var searchText = searchbar.value.toLowerCase();
+        
+                searchResults.innerHTML = '<div class="search-results-header"><p>Search Results</p></div>';
+                var resultsGallery = document.createElement('div');
+                resultsGallery.className = 'image_gallery';
+        
+                for (var i = 0; i < galleries.length; i++) {
+                    var images = galleries[i].getElementsByTagName('img');
+                    for (var j = 0; j < images.length; j++) {
+                        var filename = images[j].getAttribute('data-filename').toLowerCase();
+        
+                        if (filename.includes(searchText)) {
+                            resultsGallery.appendChild(images[j].parentElement.cloneNode(true));
+                        }
+                    }
+                }
+        
+                searchResults.appendChild(resultsGallery);
+        
+                if (searchText) {
+                    nonSearchResults.style.display = 'none';
+                    searchResults.style.display = 'block';
+                } else {
+                    nonSearchResults.style.display = 'block';
+                    searchResults.style.display = 'none';
+                }
+            }
+        
+            searchbar.addEventListener('focus', function() {
+                nonSearchResults.style.display = 'none';
+                searchResults.style.display = 'block';
+            });
+        
+            searchbar.addEventListener('blur', function() {
+                if (!searchbar.value) {
+                    nonSearchResults.style.display = 'block';
+                    searchResults.style.display = 'none';
+                }
+            });
+
+            function disableOtherCheckboxes(checkboxesToDisable, shouldDisable) {
+                for (var i = 0; i < checkboxesToDisable.length; i++) {
+                    checkboxesToDisable[i].disabled = shouldDisable;
+                }
+            }
+
+            var checkboxes = document.getElementsByClassName('image-checkbox');
+            var deleteBar = document.getElementById('delete-images');
+
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].addEventListener('change', function() {
+                    disableOtherCheckboxes(document.getElementsByClassName('audio-checkbox'), this.checked);
+                    for (var j = 0; j < checkboxes.length; j++) {
+                        if (checkboxes[j].checked) {
+                            deleteBar.classList.add('visible');
+                            return;
+                        }
+                    }
+                    deleteBar.classList.remove('visible');
+                });
+            }
+
+            function deleteImages() {
+                var imageIds = [];
+                for (var i = 0; i < checkboxes.length; i++) {
+                    if (checkboxes[i].checked) {
+                        imageIds.push(checkboxes[i].getAttribute('data-image-id'));
+                    }
+                }
+                fetch('/delete_images?image_ids=' + imageIds.join(','), {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    console.log("Reloading page")
+                    location.reload();
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+
+            var audioCheckboxes = document.getElementsByClassName('audio-checkbox');
+            var deleteAudioBar = document.getElementById('delete-audio');
+
+            for (var i = 0; i < audioCheckboxes.length; i++) {
+                audioCheckboxes[i].addEventListener('change', function() {
+                    disableOtherCheckboxes(checkboxes, this.checked);
+                    for (var j = 0; j < audioCheckboxes.length; j++) {
+                        if (audioCheckboxes[j].checked) {
+                            deleteAudioBar.classList.add('visible');
+                            return;
+                        }
+                    }
+                    deleteAudioBar.classList.remove('visible');
+                });
+            }
+
+            function deleteAudio() {
+                var audioIds = [];
+                for (var i = 0; i < audioCheckboxes.length; i++) {
+                    if (audioCheckboxes[i].checked) {
+                        audioIds.push(audioCheckboxes[i].getAttribute('data-image-id'));
+                    }
+                }
+                fetch('/delete_audios?audio_ids=' + audioIds.join(','), {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    console.log("Reloading page")
+                    location.reload();
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+
+            var modal = document.getElementById("imageModal");
+            var modalImg = document.getElementById("modalImage");
+            var modalCaption = document.getElementById("modal-caption");
+
+            var images = document.getElementsByTagName('img');
+            for (var i = 0; i < images.length; i++) {
+                var img = images[i];
+                img.onclick = function(evt) {
+                    modal.style.display = "flex";
+                    modalImg.src = this.src;
+                    modalCaption.innerHTML = this.getAttribute('data-filename');
+                }
+            }
+            modalImg.onclick = function(evt) {
+                evt.stopPropagation(); 
+            }
+
+            var span = document.getElementsByClassName("close")[0];
+            span.onclick = function() { 
+                modal.style.display = "none";
+            }
+        </script>
+    </body>
+</html>

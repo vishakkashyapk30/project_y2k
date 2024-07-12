@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Images/Audio Database</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link rel="icon" href={{url_for('static',filename='images/logo-no-text.png')}} type="image/x-icon">
+        <link rel="stylesheet" href={{url_for('static',filename='styles/commstyle.css')}}>
+        <link rel="stylesheet" href={{url_for('static',filename='styles/dbstyle.css')}}>
+    </head>
+    <body>
+        <nav class="sidebar">
+            <ul class="sidebar-nav">
+                <div class="sidebar-logo">
+                    <img src={{url_for('static',filename='images/logo-no-text.png')}} alt="logo">
+                </div>
+                <button class="sidebar-close" onclick="toggleMenu()">
+                    <i  id="sidebar-btn" class='bx bxs-chevrons-right'></i>
+                </button>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('user_dashboard') }}>
+                        <i class='bx bx-home-alt-2' ></i>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('video_editor') }}>
+                        <i class='bx bx-video-plus' ></i>
+                        <span class="nav-text">Video Editor</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('upload') }}>
+                        <i class='bx bx-upload'></i>
+                        <span class="nav-text">Upload Images/Audio</span>
+                    </a>
+                </li>
+            </ul>
+            <ul>
+                {% if username == 'admin' %}
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('admin_dashboard') }}>
+                        <i class='bx bxs-report'></i>
+                        <span class="nav-text">Admin Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('images_audio_database') }}>
+                        <i class='bx bx-data' ></i>
+                        <span class="nav-text">Media Database</span>
+                    </a>
+                </li>
+                {% endif %}
+                <li class="sidebar-nav-item">
+                    <a href="{{ url_for('user_details', username=username) }}">
+                        <i class='bx bxs-user-circle'></i>
+                        <span class="nav-text">{{username}}</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('logout') }}>
+                        <i class='bx bx-log-out' ></i>
+                        <span class="nav-text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="main-content">
+            <header>
+                <h2>IMAGES AND AUDIOS DATABASE</h2>
+            </header>
+            <h3>IMAGES</h3>
+            <div class="table-container">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>Image ID</th>
+                            <th>File Name</th>
+                            <th>User ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for image in images %}
+                        <tr>
+                            <td>{{ image.id }}</td>
+                            <td>{{ image.filename }}</td>
+                            <td>{{ image.user_id }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <h3>AUDIOS</h3>
+            <div class="table-container">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>Audio ID</th>
+                            <th>File Name</th>
+                            <th>User ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for audio in audios %}
+                        <tr>
+                            <td>{{ audio.id }}</td>
+                            <td>{{ audio.filename }}</td>
+                            <td>{{ audio.user_id }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script src="{{ url_for('static', filename='scripts/script.js') }}" async defer></script>
+    </body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Video Editor</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link rel="icon" href={{url_for('static',filename='images/logo-no-text.png')}} type="image/x-icon">
+        <link rel="stylesheet" href={{url_for('static',filename='styles/commstyle.css')}}>
+        <link rel="stylesheet" href={{url_for('static',filename='styles/videostyle.css')}}>
+    </head>
+    <body>
+        <nav class="sidebar">
+            <ul class="sidebar-nav">
+                <div class="sidebar-logo">
+                    <img src={{url_for('static',filename='images/logo-no-text.png')}} alt="logo">
+                </div>
+                <button class="sidebar-close" onclick="toggleMenu()">
+                    <i  id="sidebar-btn" class='bx bxs-chevrons-right'></i>
+                </button>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('user_dashboard') }}>
+                        <i class='bx bx-home-alt-2' ></i>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('video_editor') }}>
+                        <i class='bx bx-video-plus' ></i>
+                        <span class="nav-text">Video Editor</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('upload') }}>
+                        <i class='bx bx-upload'></i>
+                        <span class="nav-text">Upload Images/Audio</span>
+                    </a>
+                </li>
+            </ul>
+            <ul>
+                {% if username == 'admin' %}
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('admin_dashboard') }}>
+                        <i class='bx bxs-report'></i>
+                        <span class="nav-text">Admin Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('images_audio_database') }}>
+                        <i class='bx bx-data' ></i>
+                        <span class="nav-text">Media Database</span>
+                    </a>
+                </li>
+                {% endif %}
+                <li class="sidebar-nav-item">
+                    <a href="{{ url_for('user_details', username=username) }}">
+                        <i class='bx bxs-user-circle'></i>
+                        <span class="nav-text">{{username}}</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('logout') }}>
+                        <i class='bx bx-log-out' ></i>
+                        <span class="nav-text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="main-content">
+            <header>
+                <div class="project-information">
+                    <form>
+                        <input type="text" id="project-name" name="project-name" value="New Project" required>
+                        <h2>Video Editor</h2>
+                        <button type="submit" id="create-video" class="btn">Download Video</button>
+                    </form>
+                </div>
+            </header>
+            <main>
+                <div class="video-editor">
+                    <div class="preview">
+                        <video id="video-preview" controls>
+                            <source src="" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="editor">
+                        <div class="media" onclick="openImagesAudiosModal()">
+                            <i class='bx bx-plus' description='Add Images/Audio' onclick="activateImageAudioModal()"></i>
+                            <button onclick="createVideo()">Preview Video</button>
+                        </div>
+                        <div class="timeline">
+                            <div id="audio-timeline" class="audio-timeline">
+                                
+                            </div>
+                            <div id="image-timeline" class="image-timeline">
+                                <div class="timeline-object" id="timeline-object-1" draggable="true" ondragstart="drag(event)">
+                                    <img src="" alt="image" id="timeline-image-1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <div id="images-audios-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">
+                    <i class='bx bx-x'></i>
+                </span>
+                <h3>Images</h3>
+                <div class="images">
+                    {% for image in images %}
+                        <div class="image" onclick="selectImage(this, {{image.id}})">
+                            <img src="{{ url_for('get_image',image_id=image.id) }}" alt="{{ image }}" id="image-{{image.id}}">
+                        </div>
+                    {% endfor %}
+                </div>
+                <h3>Audios</h3>
+                <ul class="audios">
+                    {% for audio in audios %}
+                    <li class="audio" onclick="selectAudio(this, {{audio.id}})">
+                        <p>{{ audio.filename }}</p>
+                        <audio controls>
+                            <source src="{{ url_for('get_audio',audio_id=audio.id) }}" type="audio/mpeg" id="audio-{{audio.id}}" >
+                        Your browser does not support the audio element.
+                        </audio>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <button id="add-media" class="btn" onclick="addMedia()">Add Media</button>
+            </div>
+        </div>
+        <div id="image-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">
+                    <i class='bx bx-x'></i>
+                </span>
+                <div id="selected-img">
+                    <img src="" alt="selected image">
+                </div>
+                <div class="edit-panel">
+                    <div class="edit-option-set">
+                        <h3>Transitions</h3>
+                        <select id="image-transition" name="image-transition">
+                            <option value="dissolve">dissolve</option>
+                            <option value="radial">radial</option>
+                            <option value="circleopen">circleopen</option>
+                            <option value="circleclose">circleclose</option>
+                            <option value="pixelize">pixelize</option>
+                            <option value="hlslice">hlslice</option>
+                            <option value="hrslice">hrslice</option>
+                            <option value="vuslice">vuslice</option>
+                            <option value="vdslice">vdslice</option>
+                            <option value="hblur">hblur</option>
+                            <option value="fadegrays">fadegrays</option>
+                            <option value="fadeblack">fadeblack</option>
+                            <option value="fadewhite">fadewhite</option>
+                            <option value="rectcrop">rectcrop</option>
+                            <option value="circlecrop">circlecrop</option>
+                            <option value="wipeleft">wipeleft</option>
+                            <option value="wiperight">wiperight</option>
+                            <option value="slidedown">slidedown</option>
+                            <option value="slideup">slideup</option>
+                            <option value="slideleft">slideleft</option>
+                            <option value="slideright">slideright</option>
+                            <option value="distance">distance</option>
+                            <option value="diagtl">diagtl</option>
+                        </select>
+                    </div>
+                    <div class="edit-option-set">
+                        <h3>Background Overlay</h3>
+                        <input type="color" id="background-overlay" name="background-overlay" value="#000000">
+                    </div>
+                    <div class="edit-option-set">
+                        <h3>Duration</h3>
+                        <input type="number" id="duration" name="duration" min="1" max="15" value="5">
+                    </div>
+                    <button id="set-image" class="btn">Set Image</button>
+                </div>
+            </div>
+        </div>
+        <div id="audio-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">
+                    <i class='bx bx-x'></i>
+                </span>
+                <div id="selected-audio">
+                    <audio controls>
+                        <source src="" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div class="edit-panel">
+                    <div class="edit-option-set">
+                        <h3>Transitions</h3>
+                        <select id="audio-transition" name="audio-transition">
+                            <option value="none">None</option>
+                            <option value="fade">Fade In</option>
+                            <option value="fade-out">Fade Out</option>
+                        </select>
+                    </div>
+                    <div class="edit-option-set">
+                        <h3>Volume</h3>
+                        <input type="range" id="volume" name="volume" min="0" max="100" value="50">
+                    </div>
+                    <div class="edit-option-set">
+                        <h3>Start Time</h3>
+                        <input type="number" id="start-time" name="start-time" min="0" value="0">
+                        <h3>End Time</h3>
+                        <input type="number" id="end-time" name="end-time" min="0" value="0">
+                    </div>
+                    <button id="set-audio" class="btn">Set Audio</button>
+                </div>
+            </div>
+        </div>
+        <script src="{{ url_for('static', filename='scripts/script.js') }}" async defer></script>
+        <script>
+
+        </script>
+    </body>
+</html>

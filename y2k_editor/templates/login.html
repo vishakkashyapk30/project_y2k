@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{csrf_token()}}">
+    <title>Login | Y2K Video Editor</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="icon" href={{url_for('static',filename='images/logo-no-text.png')}} type="image/x-icon">
+    <link rel="stylesheet" href={{url_for('static',filename='styles/loginstyle.css')}}>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="bubbles">
+            <span style="--i:19"></span>
+            <span style="--i:16"></span>
+            <span style="--i:19"></span>
+            <span style="--i:22"></span>
+            <span style="--i:17"></span>
+            <span style="--i:20"></span>
+            <span style="--i:25"></span>
+            <span style="--i:15"></span>
+            <span style="--i:23"></span>
+            <span style="--i:18"></span>
+            <span style="--i:24"></span>
+            <span style="--i:25"></span>
+            <span style="--i:16"></span>
+            <span style="--i:20"></span>
+            <span style="--i:21"></span>
+            <span style="--i:18"></span>
+            <span style="--i:19"></span>
+            <span style="--i:23"></span>
+            <span style="--i:17"></span>
+            <span style="--i:22"></span>
+            <span style="--i:15"></span>
+            <span style="--i:24"></span>
+            <span style="--i:19"></span>
+            <span style="--i:23"></span>
+            <span style="--i:21"></span>
+            <span style="--i:20"></span>
+            <span style="--i:25"></span>
+            <span style="--i:16"></span>
+            <span style="--i:17"></span>
+            <span style="--i:22"></span>
+            <span style="--i:18"></span>
+            <span style="--i:15"></span>
+            <span style="--i:21"></span>
+            <span style="--i:24"></span>
+            <span style="--i:23"></span>
+            <span style="--i:19"></span>
+            <span style="--i:20"></span>
+            <span style="--i:25"></span>
+            <span style="--i:16"></span>
+            <span style="--i:17"></span>
+            <span style="--i:22"></span>
+            <span style="--i:15"></span>
+            <span style="--i:24"></span>
+            <span style="--i:18"></span>
+            <span style="--i:19"></span>
+            <span style="--i:23"></span>
+            <span style="--i:20"></span>
+            <span style="--i:25"></span>
+            <span style="--i:16"></span>
+            <span style="--i:17"></span>
+            <span style="--i:22"></span>
+            <span style="--i:15"></span>
+            <span style="--i:24"></span>
+            <span style="--i:19"></span>
+            <span style="--i:23"></span>
+            <span style="--i:21"></span>
+            <span style="--i:20"></span>
+            <span style="--i:25"></span>
+            <span style="--i:16"></span>
+            <span style="--i:17"></span>
+            <span style="--i:22"></span>
+            <span style="--i:18"></span>
+            <span style="--i:15"></span>
+            <span style="--i:21"></span>
+            <span style="--i:24"></span>
+            <span style="--i:23"></span>
+            <span style="--i:19"></span>
+            <span style="--i:20"></span>
+            <span style="--i:25"></span>
+            <span style="--i:16"></span>
+            <span style="--i:17"></span>
+            <span style="--i:22"></span>
+            <span style="--i:15"></span>
+            <span style="--i:24"></span>
+            <span style="--i:18"></span>
+            <span style="--i:19"></span>
+            <span style="--i:23"></span>
+            <span style="--i:21"></span>
+            <span style="--i:20"></span>
+            <span style="--i:25"></span>
+            <span style="--i:16"></span>
+            <span style="--i:18"></span>
+            <span style="--i:15"></span>
+            <span style="--i:21"></span>
+            <span style="--i:24"></span>
+            <span style="--i:23"></span>
+            <span style="--i:19"></span>
+            <span style="--i:20"></span>
+            <span style="--i:25"></span>
+            <span style="--i:16"></span>
+            <span style="--i:17"></span>
+            <span style="--i:22"></span>
+            <span style="--i:15"></span>
+            <span style="--i:24"></span>
+            <span style="--i:18"></span>
+        </div>
+    </div>
+    <div class="back-button" onclick="window.location.href='/'">
+        <i class='bx bx-arrow-back'></i>    
+    </div>
+    <div class="box">
+        <span class="borderLine"></span>
+        <form id="loginForm" method="post" action="/login">
+            <h2>Login</h2>
+            <div class="inputBox">
+                <input type="text" name="username" id="username" required="">
+                <span>Username</span>
+                <i></i>
+            </div>
+            <div class="inputBox">
+                <input type="password" name="password" id="password" required="">
+                <span>Password</span>
+                <i></i>
+            </div>
+            <div class="links">
+                <a href={{ url_for('signup') }}>Don't have an account? Sign Up</a>
+            </div>
+            <input type="submit" value="Login" class="login-button">
+        </form>
+    </div>
+    <script>
+        $('#loginForm').on('submit', function(event) {
+            event.preventDefault();
+            doLogin();
+        });
+        function doLogin(){
+            var username = $('#username').val();
+            var password = $('#password').val();
+            var csrf_token = $('input[name="csrf_token"]').val();
+            $.ajax({
+                url: '/login',
+                type: 'POST',
+                data: {
+                    username: username,
+                    password: password,
+                    csrf_token: csrf_token
+                },
+                success: function(response){
+                    if(username == 'admin'){
+                        if(response.status == 'success'){
+                            alert(response.message);
+                            window.location.href = '/admin_dashboard/admin';
+                        } else if(response.status == 'error'){
+                            alert(response.message);
+                            window.location.href = '/login';
+                        }   
+                    }else{
+                        if(response.status == 'success'){
+                            alert(response.message);
+                            window.location.href = '/user_dashboard';
+                        } else if(response.status == 'error'){
+                            alert(response.message);
+                            window.location.href = '/login';
+                        }
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    alert('An error occurred during the request: ' + textStatus);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

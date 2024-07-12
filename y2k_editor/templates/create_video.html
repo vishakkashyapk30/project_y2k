@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Video Editor</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link rel="icon" href={{url_for('static',filename='images/logo-no-text.png')}} type="image/x-icon">
+        <link rel="stylesheet" href={{url_for('static',filename='styles/commstyle.css')}}>
+        <link rel="stylesheet" href={{url_for('static',filename='styles/videostyle.css')}}>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <nav class="sidebar">
+            <ul class="sidebar-nav">
+                <div class="sidebar-logo">
+                    <img src={{url_for('static',filename='images/logo-no-text.png')}} alt="logo">
+                </div>
+                <button class="sidebar-close" onclick="toggleMenu()">
+                    <i  id="sidebar-btn" class='bx bxs-chevrons-right'></i>
+                </button>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('user_dashboard') }}>
+                        <i class='bx bx-home-alt-2' ></i>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('video_editor') }}>
+                        <i class='bx bx-video-plus' ></i>
+                        <span class="nav-text">Video Editor</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('upload') }}>
+                        <i class='bx bx-upload'></i>
+                        <span class="nav-text">Upload Images/Audio</span>
+                    </a>
+                </li>
+            </ul>
+            <ul>
+                {% if username == 'admin' %}
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('admin_dashboard') }}>
+                        <i class='bx bxs-report'></i>
+                        <span class="nav-text">Admin Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('images_audio_database') }}>
+                        <i class='bx bx-data' ></i>
+                        <span class="nav-text">Media Database</span>
+                    </a>
+                </li>
+                {% endif %}
+                <li class="sidebar-nav-item">
+                    <a href="{{ url_for('user_details', username=username) }}">
+                        <i class='bx bxs-user-circle'></i>
+                        <span class="nav-text">{{username}}</span>
+                    </a>
+                </li>
+                <li class="sidebar-nav-item">
+                    <a href={{ url_for('logout') }}>
+                        <i class='bx bx-log-out' ></i>
+                        <span class="nav-text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="main-content">
+            <div class="project-control">
+                <div class="project-control-left">
+                    <input type="text" id="project-name" placeholder="Project Name">
+                </div>
+                <div class="project-control-center">
+                    <button id="add-image" class="project-control-btn" onclick="addImage()">Add Image</button>
+                    <button id="add-audio" class="project-control-btn" onclick="addAudio()">Add Audio</button>
+                </div>
+                <div class="project-control-right">
+                    <select id="resolution" name="resolution">
+                        <option value="360p">360p</option>
+                        <option value="720p">720p</option>
+                    </select>
+                    <button id="preview-video" class="project-control-btn" onclick="previewVideo()">Preview Video</button>
+                    <button id="save-video" class="project-control-btn" onclick="saveVideo()">Export Video</button>
+                </div>
+            </div>
+            <div class="project">
+                <div class="audio-timeline">
+                    <div class="timeline-header">
+                        <h3>Audio Timeline</h3>
+                    </div>
+                </div>
+                <div class="video-player">
+                    <div class="preview">
+                        
+                    </div>
+                    <div class="editor">
+                        <div id="audio-options" class="editor-options">
+                            <h3>Audio Effects</h3>
+                            <div class="edit-option-set">
+                                <h3>Volume</h3>
+                                <input type="range" id="volume" name="volume" min="0" max="100" value="50">
+                            </div>
+                            <div class="edit-option-set">
+                                <h3>Audio Duration</h3>
+                                <input type="range" id="audio-duration" name="duration" min="1" max="15">
+                                <span id="audio-duration-value"></span>
+                            </div>
+                            <button id="set-audio" onclick="setAudio()" disabled>Set Audio</button>
+                        </div>
+                        <div id="image-options" class="editor-options show">
+                            <h3>Image Effects</h3>
+                            <div class="edit-option-set">
+                                <h3>Image Transition</h3>
+                                <select id="image-transition" name="image-transition">
+                                    <option value="dissolve">Dissolve</option>
+                                    <option value="radial">Radial</option>
+                                    <option value="circleopen">Circle Open</option>
+                                    <option value="circleclose">Circle Close</option>
+                                    <option value="pixelize">Pixelize</option>
+                                    <option value="hlslice">Horizontal Left Slice</option>
+                                    <option value="hrslice">Horizontal Right Slice</option>
+                                    <option value="vuslice">Vertical Up Slice</option>
+                                    <option value="vdslice">Vertical Down Slice</option>
+                                    <option value="hblur">Horizontal Blur</option>
+                                    <option value="fadegrays">Fade Grays</option>
+                                    <option value="fadeblack">Fade Black</option>
+                                    <option value="fadew    te">Fade White</option>
+                                    <option value="rectcrop">Rectangle Crop</option>
+                                    <option value="circlecrop">Circle Crop</option>
+                                    <option value="wipeleft">Wipe Left</option>
+                                    <option value="wiperight">Wipe Right</option>
+                                    <option value="slidedown">Slide Down</option>
+                                    <option value="slideup">Slide Up</option>
+                                    <option value="slideleft">Slide Left</option>
+                                    <option value="slideright">Slide Right</option>
+                                    <option value="distance">Pastel Fade</option>
+                                    <option value="diagtl">Diagonal Top Left</option>
+                                </select>
+                            </div>
+                            <div class="edit-option-set">
+                                <h3>Background Color</h3>
+                                <input type="color" id="background-overlay" name="background-overlay" value="#000000">
+                            </div>
+                            <div class="edit-option-set">
+                                <h3>Image Duration</h3>
+                                <input type="number" id="image-duration" name="duration" min="1" max="30" value="5">
+                            </div>
+                            <button id="set-image" onclick="setImage()" disabled>Set Image</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="image-timeline">
+                    <div class="timeline-header">
+                        <h3>Image Timeline</h3>
+                    </div>
+                </div>
+            </div>
+            <div id="add-image-modal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Add Image</h2>
+                        <button class="modal-close" onclick="closeModal()"><i class='bx bx-x'></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-image-gallery">
+                            {% for image in images %}
+                            <div class="modal-image" onclick="selectImage(this, BigInt({{image.id}}), '{{image.filename}}')">
+                                <img src="{{ url_for('get_image', image_id=image.id) }}" alt="{{ image.name }}">
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <button class="modal-btn" onclick="addImageToTimeline()">Add Image</button>
+                </div>
+            </div>
+            <div id="add-audio-modal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Add Audio</h2>
+                        <button class="modal-close" onclick="closeModal()"><i class='bx bx-x'></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="modal-audio-gallery">
+                            {% for audio in audios %}
+                            <li>
+                                <div class="modal-audio">
+                                    <p>{{ audio.filename }}</p>
+                                    <audio controls>
+                                        <source src="{{ url_for('get_audio', audio_id=audio.id) }}" type="audio/mpeg">
+                                    </audio>
+                                    <button onclick="selectAudio(this, BigInt({{audio.id}}), '{{audio.filename}}')">Select</button>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <button class="modal-btn" onclick="addAudioToTimeline()">Add Audio</button>
+                </div>
+            </div>
+        </div>
+        <script src="{{ url_for('static', filename='scripts/script.js') }}" async defer></script>
+        <script>
+            document.getElementById('audio-duration').addEventListener('input', function() {
+                document.getElementById('audio-duration-value').textContent = this.value;
+            });
+
+            var selectedImages = [];
+            var selectedAudios = [];
+
+            var timelineImages = {{ timeline_images }};
+            var timelineAudios = {{ timeline_audios }};
+
+            function addImage() {
+                document.getElementById('add-image-modal').style.display = 'block';
+            }
+
+            function addAudio() {
+                document.getElementById('add-audio-modal').style.display = 'block';
+            }
+
+            function closeModal() {
+                document.getElementById('add-image-modal').style.display = 'none';
+                document.getElementById('add-audio-modal').style.display = 'none';
+            }
+
+            function selectImage(imageDiv, imageId, imageFilename) {
+                var imageObject = {
+                    image_id: imageId,
+                    filename: imageFilename,
+                }
+                imageObject.image_id = imageObject.image_id.toString();
+                if (imageDiv.classList.contains('selected')) {
+                    imageDiv.classList.remove('selected');
+                    selectedImages = selectedImages.filter(image => image.image_id != imageId);
+                } else {
+                    imageDiv.classList.add('selected');
+                    console.log(imageObject);
+                    selectedImages.push(imageObject);
+                }
+            }
+
+            function selectAudio(audioBtn, audioId, audioFilename) {
+                var audioObject = {
+                    audio_id: audioId,
+                    filename: audioFilename,
+                }
+                audioObject.audio_id = audioObject.audio_id.toString();
+                audioDiv = audioBtn.parentElement;
+                if (audioDiv.classList.contains('selected')) {
+                    audioDiv.classList.remove('selected');
+                    selectedAudios = selectedAudios.filter(audio => audio.audio_id != audioId);
+                } else {
+                    audioDiv.classList.add('selected');
+                    selectedAudios.push(audioObject);
+                }
+            }
+
+            function addImageToTimeline() {
+                selectedImages.forEach(image => {
+                    timelineImages.push(image);
+                });
+
+                oldSelectedImages = document.querySelectorAll('.modal-image.selected');
+                oldSelectedImages.forEach(image => {
+                    image.classList.remove('selected');
+                });
+
+                selectedImages = [];
+                closeModal();
+                updateImageTimeline();
+            }
+
+            function addAudioToTimeline() {
+                selectedAudios.forEach(audio => {
+                    timelineAudios.push(audio);
+                });
+
+                oldSelectedAudios = document.querySelectorAll('.modal-audio.selected');
+                oldSelectedAudios.forEach(audio => {
+                    audio.classList.remove('selected');
+                });
+                 
+                selectedAudios = [];
+                closeModal();
+                updateAudioTimeline();
+            }
+
+            var getImageUrlPattern = "{{ url_for('get_image', image_id='__ID__') }}";
+            var getAudioUrlPattern = "{{ url_for('get_audio', audio_id='__ID__') }}";
+
+            var currentImageIndex = 0;
+
+            function updateImageTimeline() {
+                var imageTimeline = document.querySelector('.image-timeline');
+                imageTimeline.innerHTML = `
+                <div class="timeline-header">
+                    <h3>Image Timeline</h3>
+                </div>
+                `;
+                var imgcnt = 0;
+                timelineImages.forEach(image => {
+                    var imageDiv = document.createElement('div');
+                    imageDiv.classList.add('timeline-image');
+                    imageDiv.setAttribute('onclick', 'addImageProperties(this)');
+                    imageDiv.setAttribute('for', imgcnt);
+                    var imageUrl = getImageUrlPattern.replace('__ID__', image.image_id);
+                    console.log(image)
+                    console.log(imageUrl);
+                    imageDiv.innerHTML = `<img src="${imageUrl}" alt="image" name="${imgcnt}">`;
+                    console.log(imageUrl);
+                    imgcnt++;
+                    imageTimeline.appendChild(imageDiv);
+                });
+            }
+
+            function updateAudioTimeline() {
+                var audioTimeline = document.querySelector('.audio-timeline');
+                audioTimeline.innerHTML = `
+                <div class="timeline-header">
+                    <h3>Audio Timeline</h3>
+                </div>
+                `;
+                timelineAudios.forEach(audio => {
+                    var audioDiv = document.createElement('div');
+                    audioDiv.classList.add('timeline-audio');
+                    var audiocnt = 0;
+                    audioDiv.innerHTML = `
+                        <p name="${audiocnt}" onclick="addAudioProperties(this)">${audio.filename}</p>
+                    `;
+                    audiocnt++;
+                    audioTimeline.appendChild(audioDiv);
+                });
+            }
+
+            imageIndex = -1;
+            audioIndex = -1;
+
+            function addImageProperties(imageToSetDiv) {
+                var imageButton = document.getElementById('set-image');
+                var audioButton = document.getElementById('set-audio'); 
+                audioButton.disabled = true;
+                imageButton.disabled = false;
+
+                audioIndex = -1;
+                var preview = document.querySelector('.preview');
+                preview.innerHTML = '';
+
+                imageIndex = imageToSetDiv.getAttribute('for');
+                var imageUrl = getImageUrlPattern.replace('__ID__', timelineImages[imageIndex].image_id);
+                var image = document.createElement('img');
+                image.src = imageUrl;
+                preview.appendChild(image);
+            }
+
+            function addAudioProperties(audioToSet) {
+                var imageButton = document.getElementById('set-image');
+                var audioButton = document.getElementById('set-audio'); 
+                imageButton.disabled = true;
+                audioButton.disabled = false;
+
+                imageIndex = -1;
+                var preview = document.querySelector('.preview');
+                preview.innerHTML = '';
+
+                audioIndex = audioToSet.getAttribute('name');
+                var audio = document.createElement('audio');
+                audio.controls = true;
+                audio.src = getAudioUrlPattern.replace('__ID__', timelineAudios[audioIndex].audio_id);
+                preview.appendChild(audio);
+            }
+
+            function setAudio(){
+                if(audioIndex == -1){
+                    alert('Please select an audio to set');
+                } else {
+                    var volumne = document.getElementById('volume').value;
+                    var duration = document.getElementById('audio-duration').value;
+                    timelineAudios[audioIndex].volume = volumne;
+                    timelineAudios[audioIndex].duration = duration;
+                    console.log(timelineAudios[audioIndex]);
+                }
+            }
+
+            function setImage(){
+                if(imageIndex == -1){
+                    alert('Please select an image to set');
+                } else {
+                    var transition = document.getElementById('image-transition').value;
+                    var background = document.getElementById('background-overlay').value;
+                    var duration = document.getElementById('image-duration').value;
+                    timelineImages[imageIndex].transition = {   
+                        name: transition,
+                        duration: 1
+                    }
+                    timelineImages[imageIndex].background_color = background;
+                    timelineImages[imageIndex].duration = duration;
+                    console.log(timelineImages[imageIndex]);
+                }
+            }
+
+            var videoURL = '';
+
+            function previewVideo(){
+                var preview = document.querySelector('.preview');
+                preview.innerHTML = '';
+                var video = document.createElement('video');
+                video.controls = true;
+                video.autoplay = true;
+
+                var projectName = document.getElementById('project-name').value;
+
+                if(timelineImages.length == 0){
+                    timelineImages = []
+                }
+                if(timelineAudios.length == 0){
+                    timelineAudios = []
+                }
+
+                var jsonObjectToSend = {
+                    'info': {
+                        'title': projectName,
+                        'resolution': [640, 360],
+                        'framerate': 12
+                    },
+                    'video': {
+                        'images': timelineImages
+                    },
+                    'audios': timelineAudios
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/render_video',
+                    data: JSON.stringify(jsonObjectToSend),
+                    contentType: 'application/json',
+                    success: function(data) {
+                        console.log(data);
+                        videoURL = data;
+                        //video.src = videoURL;
+                        video.src = '/view_video'
+                    },
+                    error: function(error) {
+                        console.log(error);
+                        alert('Error in rendering video');
+                    }
+                });
+                preview.appendChild(video);
+            }
+
+            function saveVideo(){
+                var projectName = document.getElementById('project-name').value;
+                var resolution = document.getElementById('resolution').value;
+
+                if(resolution == '360p'){
+                    resolution = [640, 360];
+                } else {
+                    resolution = [1280, 720];
+                }
+
+                if(timelineImages.length == 0){
+                    timelineImages = []
+                }
+                if(timelineAudios.length == 0){
+                    timelineAudios = []
+                }
+
+                var jsonObjectToSend = {
+                    'info': {
+                        'title': projectName,
+                        'resolution': resolution,
+                        'framerate': 12
+                    },
+                    'video': {
+                        'images': timelineImages,
+                        'audios': timelineAudios,
+                    }
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/render_video',
+                    data: JSON.stringify(jsonObjectToSend),
+                    contentType: 'application/json',
+                    success: function(data) {
+                        console.log(data);
+                        var a = document.createElement('a');
+                        a.href = data;
+                        //a.download = projectName + '.mp4';
+                        a.download = '/view_video'
+                        a.click();
+                    },
+                    error: function(error) {
+                        console.log(error);
+                        alert('Error in rendering video');
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>

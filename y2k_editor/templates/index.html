@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Y2K Video Editor</title>
+        <link rel="icon" href={{url_for('static',filename='images/logo-no-text.png')}} type="image/x-icon">
+        <link rel="stylesheet" type="text/css" href={{ url_for('static',filename='styles/indexstyle.css') }}>
+    </head>
+    <body>
+        <div class="loading-page">
+            <div class="loader">
+                <img src={{url_for('static',filename='images/logo-no-text.png')}} alt="Y2K Logo">
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="container">
+                <div class="bubbles">
+                    <span style="--i:19"></span>
+                    <span style="--i:16"></span>
+                    <span style="--i:19"></span>
+                    <span style="--i:22"></span>
+                    <span style="--i:17"></span>
+                    <span style="--i:20"></span>
+                    <span style="--i:25"></span>
+                    <span style="--i:15"></span>
+                    <span style="--i:23"></span>
+                    <span style="--i:18"></span>
+                    <span style="--i:24"></span>
+                    <span style="--i:25"></span>
+                    <span style="--i:16"></span>
+                    <span style="--i:20"></span>
+                    <span style="--i:21"></span>
+                    <span style="--i:18"></span>
+                    <span style="--i:19"></span>
+                    <span style="--i:23"></span>
+                    <span style="--i:17"></span>
+                    <span style="--i:22"></span>
+                    <span style="--i:15"></span>
+                    <span style="--i:24"></span>
+                    <span style="--i:19"></span>
+                    <span style="--i:23"></span>
+                    <span style="--i:21"></span>
+                    <span style="--i:20"></span>
+                    <span style="--i:25"></span>
+                    <span style="--i:16"></span>
+                    <span style="--i:17"></span>
+                    <span style="--i:22"></span>
+                    <span style="--i:18"></span>
+                    <span style="--i:15"></span>
+                    <span style="--i:21"></span>
+                    <span style="--i:24"></span>
+                    <span style="--i:23"></span>
+                    <span style="--i:19"></span>
+                    <span style="--i:20"></span>
+                    <span style="--i:25"></span>
+                    <span style="--i:16"></span>
+                    <span style="--i:17"></span>
+                    <span style="--i:22"></span>
+                    <span style="--i:15"></span>
+                    <span style="--i:24"></span>
+                    <span style="--i:18"></span>
+                    <span style="--i:19"></span>
+                    <span style="--i:23"></span>
+                    <span style="--i:20"></span>
+                    <span style="--i:25"></span>
+                    <span style="--i:16"></span>
+                    <span style="--i:17"></span>
+                    <span style="--i:22"></span>
+                    <span style="--i:15"></span>
+                    <span style="--i:24"></span>
+                    <span style="--i:19"></span>
+                    <span style="--i:23"></span>
+                    <span style="--i:21"></span>
+                    <span style="--i:20"></span>
+                    <span style="--i:25"></span>
+                    <span style="--i:16"></span>
+                    <span style="--i:17"></span>
+                    <span style="--i:22"></span>
+                    <span style="--i:18"></span>
+                    <span style="--i:15"></span>
+                    <span style="--i:21"></span>
+                    <span style="--i:24"></span>
+                    <span style="--i:23"></span>
+                    <span style="--i:19"></span>
+                    <span style="--i:20"></span>
+                    <span style="--i:25"></span>
+                    <span style="--i:16"></span>
+                    <span style="--i:17"></span>
+                    <span style="--i:22"></span>
+                    <span style="--i:15"></span>
+                    <span style="--i:24"></span>
+                    <span style="--i:18"></span>
+                    <span style="--i:19"></span>
+                    <span style="--i:23"></span>
+                    <span style="--i:21"></span>
+                    <span style="--i:20"></span>
+                    <span style="--i:25"></span>
+                    <span style="--i:16"></span>
+                    <span style="--i:18"></span>
+                    <span style="--i:15"></span>
+                    <span style="--i:21"></span>
+                    <span style="--i:24"></span>
+                    <span style="--i:23"></span>
+                    <span style="--i:19"></span>
+                    <span style="--i:20"></span>
+                    <span style="--i:25"></span>
+                    <span style="--i:16"></span>
+                    <span style="--i:17"></span>
+                    <span style="--i:22"></span>
+                    <span style="--i:15"></span>
+                    <span style="--i:24"></span>
+                    <span style="--i:18"></span>
+                </div>
+            </div>
+            <div class="heading">
+                <h1>Y2K</h1>
+                <h2>Video Editor</h2>
+                <div class="buttons">
+                    <a href={{url_for('login')}}>Login</a>
+                    <a href={{url_for('signup')}}>Sign Up</a>
+                </div>
+            </div>
+        </div>
+        <script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                setTimeout(function () {
+                    document.querySelector(".loading-page").style.display = "none";
+                    document.querySelector(".main-content").style.display = "flex";
+                }, 2000);
+            });
+        </script>
+    </body>
+</html>
